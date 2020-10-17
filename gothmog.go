@@ -9,7 +9,7 @@ import (
 type GothmogHandler struct {
 }
 
-type morgothFields struct {
+type gothmogFields struct {
 	product        string
 	version        string
 	buildid        string
@@ -23,10 +23,10 @@ type morgothFields struct {
 	distVersion    string
 }
 
-func splitFields(fields string) (morgothFields, bool) {
+func splitFields(fields string) (gothmogFields, bool) {
 	sections := strings.Split(fields, "/")
 	if len(sections) != 14 {
-		return morgothFields{}, false
+		return gothmogFields{}, false
 	}
 
 	var instructionSet, memory string
@@ -40,7 +40,7 @@ func splitFields(fields string) (morgothFields, bool) {
 		instructionSet = systemCapabilities[0]
 		memory = systemCapabilities[1]
 	}
-	return morgothFields{
+	return gothmogFields{
 		product:        sections[3],
 		version:        sections[4],
 		buildid:        sections[5],
