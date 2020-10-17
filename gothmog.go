@@ -60,8 +60,19 @@ func (b *GothmogHandler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	if ok != true {
 		rw.Header().Set("Content-Type", "text/plain")
 		rw.Write([]byte("wrong number of fields"))
+    }
+
+    fakeRule := make(map[string]interface{})
+    fakeRule["product"] = "p"
+    fakeRule["mapping"] = "m"
+    fakeRule["priority"] = 99
+    rule, ok := parseRule(fakeRule)
+	if ok != true {
+		rw.Header().Set("Content-Type", "text/plain")
+		rw.Write([]byte("couldn't parse rule"))
 	} else {
 		rw.Header().Set("Content-Type", "text/plain")
 		rw.Write([]byte(fmt.Sprintf("%v", fields)))
+        rw.Write([]byte(fmt.Sprintf("%v", rule)))
 	}
 }
