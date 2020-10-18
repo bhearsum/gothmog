@@ -1,55 +1,30 @@
 package main
 
 import (
-    "reflect"
+    "io/ioutil"
     "testing"
 )
 
-func TestParseRule(t *testing.T) {
+func TestParseRules(t *testing.T) {
     tests := map[string]struct {
-        rawRule map[string]interface{}
-        want Rule
+        file string
+        err error
     } {
-        "simple": {
-            rawRule: map[string]interface{}{
-                "product": "Firefox",
-                "mapping": "Firefox-58.0-build1",
-                "channel": "release",
-                "priority": 100,
-            },
-            want: Rule{
-                properties: gothmogFields{
-                    product: "Firefox",
-                    channel: "release",
-                },
-                release_mapping: "Firefox-58.0-build1",
-                priority: 100,
-            },
-        },
-        "fallback mapping ignored": {
-            rawRule: map[string]interface{}{
-                "product": "Firefox",
-                "mapping": "Firefox-58.0-build1",
-                "channel": "release",
-                "priority": 100,
-                "fallbackMapping": "ignored",
-            },
-            want: Rule{
-                properties: gothmogFields{
-                    product: "Firefox",
-                    channel: "release",
-                },
-                release_mapping: "Firefox-58.0-build1",
-                priority: 100,
-            },
+        "good rules": {
+            file: "fixtures/good_rules.json",
+            err: nil,
         },
     }
 
     for name, testcase := range tests {
-        got, _ := parseRule(testcase.rawRule)
+        data, err := ioutil.ReadFile(testcase.file)
+        if err != testcase.err {
+            t.Errorf("%v failed when reading %v: %v", name, testcase.file, testcase.err)
+        }
 
-        if !reflect.DeepEqual(testcase.want, got) {
-            t.Errorf("%v: Parsed rule does not match expected value: %v, %v", name, got, testcase.want)
+        _, err = parseRules(data)
+        if err != nil {
+            t.Errorf("%v failed when parsing rules: %v", name, testcase.err)
         }
     }
 }

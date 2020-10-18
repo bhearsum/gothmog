@@ -23,6 +23,7 @@ type gothmogFields struct {
 	distVersion    string
 }
 
+// TODO: make sure bad data is handled
 func splitFields(fields string) (gothmogFields, bool) {
 	sections := strings.Split(fields, "/")
 	if len(sections) != 14 {
