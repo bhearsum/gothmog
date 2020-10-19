@@ -7,6 +7,7 @@ import (
 )
 
 type GothmogHandler struct {
+	rules *Rules
 }
 
 // gothmogFields hold all of the relevant information contained in an update request URI
