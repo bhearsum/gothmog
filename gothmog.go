@@ -64,6 +64,62 @@ func splitFields(fields string) (gothmogFields, bool) {
 	}, true
 }
 
+// findMatchingRule compares an incoming request against a set of
+// Rules and returns the best matching Rule.
+func findMatchingRule(rules *Rules, req gothmogFields) Rule {
+	var matchingRule Rule
+	matchingRule.priority = -1
+
+	for _, rule := range *rules {
+		if rule.properties.product == "" || rule.properties.product != req.product {
+			continue
+		}
+		// TODO: support version comparison
+		if rule.properties.version == "" || rule.properties.version != req.version {
+			continue
+		}
+		// TODO: support version comparison
+		if rule.properties.buildid == "" || rule.properties.buildid != req.buildid {
+			continue
+		}
+		// TODO: support comma separated values
+		if rule.properties.buildTarget == "" || rule.properties.buildTarget != req.buildTarget {
+			continue
+		}
+		// TODO: support comma separated values
+		if rule.properties.locale == "" || rule.properties.locale != req.locale {
+			continue
+		}
+		// TODO: support * globbing
+		if rule.properties.channel == "" || rule.properties.buildTarget != req.buildTarget {
+			continue
+		}
+		// support comma separated values and partial matches
+		if rule.properties.osVersion == "" || rule.properties.osVersion != req.osVersion {
+			continue
+		}
+		if rule.properties.instructionSet == "" || rule.properties.instructionSet != req.instructionSet {
+			continue
+		}
+		// TODO: support comparison
+		if rule.properties.memory == "" || rule.properties.memory != req.memory {
+			continue
+		}
+		if rule.properties.distribution == "" || rule.properties.distribution != req.distribution {
+			continue
+		}
+		if rule.properties.distVersion == "" || rule.properties.distVersion != req.distVersion {
+			continue
+		}
+
+		if rule.priority > matchingRule.priority {
+			matchingRule = rule
+		}
+	}
+
+	return matchingRule
+}
+
 func (b *GothmogHandler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	// Notably, we're throwing away query args here. In reality there are
 	// a few that we should be paying attention to, but for this simple
