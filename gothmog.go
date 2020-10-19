@@ -64,8 +64,27 @@ func splitFields(fields string) (gothmogFields, bool) {
 	}, true
 }
 
+// matchCsv determines whether or not any of the comma separated
+// values of `field` match `value`. `substring` controls whether
+// a full or partial string match is performed.
+func matchCsv(field string, value string, substring bool) bool {
+	for _, f := range strings.Split(field, ",") {
+		if substring {
+			// TODO: do a substring match!
+			return false
+		} else {
+			if f == value {
+				return true
+			}
+		}
+	}
+
+	return false
+}
+
 // findMatchingRule compares an incoming request against a set of
 // Rules and returns the best matching Rule.
+// TODO: this needs tests!
 func findMatchingRule(rules *Rules, req gothmogFields) Rule {
 	var matchingRule Rule
 	matchingRule.priority = -1
@@ -83,7 +102,7 @@ func findMatchingRule(rules *Rules, req gothmogFields) Rule {
 			continue
 		}
 		// TODO: support comma separated values
-		if rule.properties.buildTarget == "" || rule.properties.buildTarget != req.buildTarget {
+		if rule.properties.buildTarget == "" || matchCsv(rule.properties.buildid, req.version, false) {
 			continue
 		}
 		// TODO: support comma separated values
