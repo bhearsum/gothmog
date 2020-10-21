@@ -15,36 +15,26 @@ type Rules []Rule
 
 // balrogRules is an intermediate structure that contains all fields that Balrog's
 // Rules have.
-type balrogRules []struct {
-	// TODO: Is it possible to only define the fields that we're actually going to use?
-	alias              string
-	backgroundRate     int
-	buildID            string
-	buildTarget        string
-	channel            string
-	comment            string
-	data_version       int
-	distVersion        string
-	distribution       string
-	headerArchitecture string
-	instructionSet     string
-	jaws               bool
-	locale             string
-	mapping            string
-	memory             string
-	mig64              bool
-	osVersion          string
-	priority           int
-	product            string
-	rule_id            int
-	update_type        string
-	version            string
+type balrogRule struct {
+	BuildID            string `json:"buildID"`
+	BuildTarget        string `json:"buildTarget"`
+	Channel            string `json:"channel"`
+	DistVersion        string `json:"distVersion"`
+	Distribution       string `json:"distribution"`
+	InstructionSet     string `json:"instructionSet"`
+	Locale             string `json:"locale"`
+	Mapping            string `json:"mapping"`
+	Memory             string `json:"memory"`
+	OsVersion          string `json:"osVersion"`
+	Priority           int    `json:"priority"`
+	Product            string `json:"product"`
+	Version            string `json:"version"`
 }
 
 // parseRules transforms Balrog Rules into Gothmog Rules
 // by plucking out the parts of the Balrog Rules we care about.
 func parseRules(data []byte) (Rules, error) {
-	var importedRules balrogRules
+	var importedRules []balrogRule
 	var parsedRules Rules
 	err := json.Unmarshal(data, &importedRules)
 	if err != nil {
@@ -54,20 +44,20 @@ func parseRules(data []byte) (Rules, error) {
 	for _, rule := range importedRules {
 		parsedRules = append(parsedRules, Rule{
 			properties: gothmogFields{
-				product:        rule.product,
-				version:        rule.version,
-				buildid:        rule.buildID,
-				buildTarget:    rule.buildTarget,
-				locale:         rule.locale,
-				channel:        rule.channel,
-				osVersion:      rule.osVersion,
-				instructionSet: rule.instructionSet,
-				memory:         rule.memory,
-				distribution:   rule.distribution,
-				distVersion:    rule.distVersion,
+				product:        rule.Product,
+				version:        rule.Version,
+				buildid:        rule.BuildID,
+				buildTarget:    rule.BuildTarget,
+				locale:         rule.Locale,
+				channel:        rule.Channel,
+				osVersion:      rule.OsVersion,
+				instructionSet: rule.InstructionSet,
+				memory:         rule.Memory,
+				distribution:   rule.Distribution,
+				distVersion:    rule.DistVersion,
 			},
-			release_mapping: rule.mapping,
-			priority:        rule.priority,
+			release_mapping: rule.Mapping,
+			priority:        rule.Priority,
 		})
 	}
 

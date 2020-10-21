@@ -8,25 +8,41 @@ import (
 func TestParseRules(t *testing.T) {
 	tests := map[string]struct {
 		file string
-		err  error
+		err  bool
 	}{
 		"good rules": {
 			file: "fixtures/good_rules.json",
-			err:  nil,
+			err:  false,
+		},
+		"bad rules": {
+			file: "fixtures/bad_rules.json",
+			err:  true,
 		},
 	}
 
 	for name, testcase := range tests {
 		data, err := ioutil.ReadFile(testcase.file)
-		if err != testcase.err {
+		if err != nil {
 			t.Errorf("%v failed when reading %v: %v", name, testcase.file, testcase.err)
+			continue
 		}
 
-		// TODO: Is there any useful verification to do on the parsed rules?
-		// The type definitions seem like they should catch any issues at compile time
-		_, err = parseRules(data)
-		if err != nil {
-			t.Errorf("%v failed when parsing rules: %v", name, testcase.err)
+		rules, err := parseRules(data)
+		if testcase.err {
+			if err == nil {
+				t.Errorf("%v should've failed but didn't when parsing rules %v", name, testcase.file)
+				continue
+			}
+		} else if err != nil {
+			t.Errorf("%v failed when parsing rules: %v", name, err)
+			continue
+		}
+
+		for _, rule := range rules {
+			if rule.release_mapping == "" {
+				t.Errorf("%v failed: no mapping found for rule: %v", name, rule)
+				break
+			}
 		}
 	}
 }

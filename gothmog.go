@@ -139,7 +139,7 @@ func findMatchingRule(rules *Rules, req gothmogFields) Rule {
 	return matchingRule
 }
 
-func (b *GothmogHandler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
+func (g *GothmogHandler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	// Notably, we're throwing away query args here. In reality there are
 	// a few that we should be paying attention to, but for this simple
 	// implementation we're just ignoring them.
