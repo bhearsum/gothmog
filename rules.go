@@ -1,6 +1,9 @@
 package main
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"strings"
+)
 
 // Rule contains all information needed to determine which Release an update request should receive. Specifically:
 // * All of the gothmogFields, which are used to determine which Rules are relevant to an update request
@@ -11,6 +14,7 @@ type Rule struct {
 	release_mapping string
 	priority        int
 }
+// TODO: is this even useful to define?
 type Rules []Rule
 
 // balrogRules is an intermediate structure that contains all fields that Balrog's
@@ -62,4 +66,81 @@ func parseRules(data []byte) (Rules, error) {
 	}
 
 	return parsedRules, nil
+}
+
+// matchCsv determines whether or not any of the comma separated
+// values of `field` match `value`. `substring` controls whether
+// a full or partial string match is performed.
+func matchCsv(field string, value string, substring bool) bool {
+	for _, f := range strings.Split(field, ",") {
+		if substring {
+			// TODO: do a substring match!
+			return false
+		} else {
+			if f == value {
+				return true
+			}
+		}
+	}
+
+	return false
+}
+
+// findMatchingRule compares an incoming request against a set of
+// Rules and returns the best matching Rule.
+// TODO: this needs tests!
+func findMatchingRule(rules *Rules, req gothmogFields) Rule {
+	// TODO: this should be define outside of the function as a general
+	// sentinel value
+	var matchingRule Rule
+	matchingRule.priority = -1
+
+	for _, rule := range *rules {
+		if rule.properties.product != "" && rule.properties.product != req.product {
+			continue
+		}
+		// TODO: support version comparison
+		if rule.properties.version != "" && rule.properties.version != req.version {
+			continue
+		}
+		// TODO: support version comparison
+		if rule.properties.buildid != "" && rule.properties.buildid != req.buildid {
+			continue
+		}
+		// TODO: support comma separated values
+		if rule.properties.buildTarget != "" && matchCsv(rule.properties.buildid, req.version, false) {
+			continue
+		}
+		// TODO: support comma separated values
+		if rule.properties.locale != "" && rule.properties.locale != req.locale {
+			continue
+		}
+		// TODO: support * globbing
+		if rule.properties.channel != "" && rule.properties.buildTarget != req.buildTarget {
+			continue
+		}
+		// support comma separated values and partial matches
+		if rule.properties.osVersion != "" && rule.properties.osVersion != req.osVersion {
+			continue
+		}
+		if rule.properties.instructionSet != "" && rule.properties.instructionSet != req.instructionSet {
+			continue
+		}
+		// TODO: support comparison
+		if rule.properties.memory != "" && rule.properties.memory != req.memory {
+			continue
+		}
+		if rule.properties.distribution != "" && rule.properties.distribution != req.distribution {
+			continue
+		}
+		if rule.properties.distVersion != "" && rule.properties.distVersion != req.distVersion {
+			continue
+		}
+
+		if rule.priority > matchingRule.priority {
+			matchingRule = rule
+		}
+	}
+
+	return matchingRule
 }

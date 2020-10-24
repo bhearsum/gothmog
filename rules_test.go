@@ -46,3 +46,49 @@ func TestParseRules(t *testing.T) {
 		}
 	}
 }
+
+func TestFindMatchingRule(t *testing.T) {
+	rules := Rules{
+		Rule{
+			properties: gothmogFields{
+				product: "Firefox",
+			},
+			release_mapping: "Firefox-76.0-build1",
+			priority: 100,
+		},
+		Rule{
+			properties: gothmogFields{
+				product: "Thunderbird",
+			},
+			release_mapping: "Thunderbird-56.0-build1",
+			priority: 100,
+		},
+	}
+	tests := map[string]struct {
+		req   gothmogFields
+		want Rule
+	}{
+		"product match": {
+			req: gothmogFields{
+				product: "Firefox",
+			},
+			want: rules[0],
+		},
+		"product no match": {
+			req: gothmogFields{
+				product: "NotFirefox",
+			},
+			want: Rule{
+				priority: -1,
+			},
+		},
+	}
+
+	for name, testcase := range tests {
+		got := findMatchingRule(&rules, testcase.req)
+		if got != testcase.want {
+			t.Errorf("%v failed. wanted: %v, got: %v", name, testcase.want, got)
+			continue
+		}
+	}
+}
