@@ -11,11 +11,11 @@ func TestParseRules(t *testing.T) {
 		err  bool
 	}{
 		"good rules": {
-			file: "fixtures/good_rules.json",
+			file: "testdata/good_rules.json",
 			err:  false,
 		},
 		"bad rules": {
-			file: "fixtures/bad_rules.json",
+			file: "testdata/bad_rules.json",
 			err:  true,
 		},
 	}
@@ -63,16 +63,27 @@ func TestFindMatchingRule(t *testing.T) {
 			release_mapping: "Thunderbird-56.0-build1",
 			priority: 100,
 		},
+		Rule{
+			properties: gothmogFields{},
+			release_mapping: "MagicBuild-1.0-build1",
+			priority: 85,
+		},
 	}
 	tests := map[string]struct {
 		req   gothmogFields
 		want Rule
 	}{
-		"product match": {
+		"product match defined": {
 			req: gothmogFields{
 				product: "Firefox",
 			},
 			want: rules[0],
+		},
+		"product match undefined": {
+			req: gothmogFields{
+				product: "SomethingElse",
+			},
+			want: rules[2],
 		},
 		"product no match": {
 			req: gothmogFields{
