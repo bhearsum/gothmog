@@ -2,6 +2,7 @@ package main
 
 import (
 	"io/ioutil"
+	"log"
 	"testing"
 )
 
@@ -47,6 +48,14 @@ func TestParseRules(t *testing.T) {
 	}
 }
 
+// TestFindMatchingRule is not necessarily the ideal way to test
+// findMatchingRule, as we don't fully isolate each individual
+// property under test - we test the entire function at once.
+// In reality, there are never rules with just one property set,
+// and it's probably better to test using realistic rules than
+// fully isolate each property under test.
+// The main downside here is that a bug in evaluating one
+// property may cause seemingly unrelated tests to fail.
 func TestFindMatchingRule(t *testing.T) {
 	data, err := ioutil.ReadFile("testdata/good_rules.json")
 	if err != nil {
@@ -73,31 +82,29 @@ func TestFindMatchingRule(t *testing.T) {
 			},
 			want: rules[46],
 		},
-		/*"product no match": {
+		"simple string no matches": {
 			req: gothmogFields{
 				product: "NotFirefox",
+				channel: "fake",
+				osVersion: "fake",
+				distribution: "fake",
 			},
 			want: Rule{
 				priority: -1,
 			},
 		},
-		"version exact match": {
+		"version less than": {
 			req: gothmogFields{
-				version: "58.0",
+				product: "Firefox",
+				channel: "esr",
+				version: "78.0",
 			},
-			want: rules[100],
+			want: rules[5],
 		},
-		"version no match": {
-			req: gothmogFields{
-				version: "NotFirefox",
-			},
-			want: Rule{
-				priority: -1,
-			},
-		},*/
 	}
 
 	for name, testcase := range tests {
+		log.Printf("Running test: %v", name)
 		got := findMatchingRule(&rules, testcase.req)
 		if got != testcase.want {
 			t.Errorf("%v failed. wanted: %v, got: %v", name, testcase.want, got)

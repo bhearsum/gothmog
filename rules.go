@@ -87,6 +87,50 @@ func matchCsv(field string, value string, substring bool) bool {
 	return false
 }
 
+// matchComparison tests whether `value` matches the
+// test in `field`. `field` may begin be a plain string
+// or begin with <, <=, >, or >=. If the latter, the operator
+// given is used to compare `value` against the non-operator
+// portion of `field`
+func matchComparison(field string, value string) bool {
+	// TODO: letting this anonymous function update `prefix`
+	// is a little nasty. It would be better if we could split
+	// by the list of all prefixes instead.
+	var prefix string
+	f := func(c rune) bool {
+		is_prefix := c == '<' || c == '>' || c == '='
+		if is_prefix {
+			prefix = prefix + string(c)
+		}
+		return is_prefix
+	}
+	field_value := strings.FieldsFunc(field, f)[0]
+
+	if prefix == "" {
+		if prefix == value {
+			return true
+		}
+		return false
+	}
+
+	// TODO: there must be a better way to do this.
+	// something like python's `operator` library maybe?
+	if prefix == "<" && value < field_value {
+		return true
+	}
+	if prefix == "<=" && value <= field_value {
+		return true
+	}
+	if prefix == ">" && value > field_value {
+		return true
+	}
+	if prefix == ">=" && value >= field_value {
+		return true
+	}
+
+	return false
+}
+
 // findMatchingRule compares an incoming request against a set of
 // Rules and returns the best matching Rule.
 // TODO: this needs tests!
@@ -100,8 +144,8 @@ func findMatchingRule(rules *Rules, req gothmogFields) Rule {
 		if rule.properties.product != "" && rule.properties.product != req.product {
 			continue
 		}
-		// TODO: support version comparison
-		if rule.properties.version != "" && rule.properties.version != req.version {
+		// TODO: support version comparison and csv
+		if rule.properties.version != "" && !matchComparison(rule.properties.version, req.version) {
 			continue
 		}
 		// TODO: support version comparison
