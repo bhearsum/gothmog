@@ -70,23 +70,23 @@ func TestFindMatchingRule(t *testing.T) {
 	}
 
 	tests := map[string]struct {
-		req   gothmogFields
+		req  gothmogFields
 		want Rule
 	}{
 		"simple string matches": {
 			req: gothmogFields{
-				product: "Firefox",
-				channel: "aurora",
+				product:        "Firefox",
+				channel:        "aurora",
 				instructionSet: "SSE",
-				osVersion: "Linux",
+				osVersion:      "Linux",
 			},
 			want: rules[46],
 		},
 		"simple string no matches": {
 			req: gothmogFields{
-				product: "NotFirefox",
-				channel: "fake",
-				osVersion: "fake",
+				product:      "NotFirefox",
+				channel:      "fake",
+				osVersion:    "fake",
 				distribution: "fake",
 			},
 			want: Rule{

@@ -15,25 +15,26 @@ type Rule struct {
 	release_mapping string
 	priority        int
 }
+
 // TODO: is this even useful to define?
 type Rules []Rule
 
 // balrogRules is an intermediate structure that contains all fields that Balrog's
 // Rules have.
 type balrogRule struct {
-	BuildID            string `json:"buildID"`
-	BuildTarget        string `json:"buildTarget"`
-	Channel            string `json:"channel"`
-	DistVersion        string `json:"distVersion"`
-	Distribution       string `json:"distribution"`
-	InstructionSet     string `json:"instructionSet"`
-	Locale             string `json:"locale"`
-	Mapping            string `json:"mapping"`
-	Memory             string `json:"memory"`
-	OsVersion          string `json:"osVersion"`
-	Priority           int    `json:"priority"`
-	Product            string `json:"product"`
-	Version            string `json:"version"`
+	BuildID        string `json:"buildID"`
+	BuildTarget    string `json:"buildTarget"`
+	Channel        string `json:"channel"`
+	DistVersion    string `json:"distVersion"`
+	Distribution   string `json:"distribution"`
+	InstructionSet string `json:"instructionSet"`
+	Locale         string `json:"locale"`
+	Mapping        string `json:"mapping"`
+	Memory         string `json:"memory"`
+	OsVersion      string `json:"osVersion"`
+	Priority       int    `json:"priority"`
+	Product        string `json:"product"`
+	Version        string `json:"version"`
 }
 
 // parseRules transforms Balrog Rules into Gothmog Rules
