@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"strings"
 )
 
@@ -108,7 +109,7 @@ func findMatchingRule(rules *Rules, req gothmogFields) Rule {
 			continue
 		}
 		// TODO: support comma separated values
-		if rule.properties.buildTarget != "" && matchCsv(rule.properties.buildid, req.version, false) {
+		if rule.properties.buildTarget != "" && !matchCsv(rule.properties.buildid, req.version, false) {
 			continue
 		}
 		// TODO: support comma separated values
@@ -116,7 +117,7 @@ func findMatchingRule(rules *Rules, req gothmogFields) Rule {
 			continue
 		}
 		// TODO: support * globbing
-		if rule.properties.channel != "" && rule.properties.buildTarget != req.buildTarget {
+		if rule.properties.channel != "" && rule.properties.channel != req.channel {
 			continue
 		}
 		// support comma separated values and partial matches
@@ -138,6 +139,7 @@ func findMatchingRule(rules *Rules, req gothmogFields) Rule {
 		}
 
 		if rule.priority > matchingRule.priority {
+			log.Printf("Replacing matchingRule %v with %v", matchingRule, rule)
 			matchingRule = rule
 		}
 	}

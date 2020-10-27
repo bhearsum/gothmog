@@ -48,44 +48,32 @@ func TestParseRules(t *testing.T) {
 }
 
 func TestFindMatchingRule(t *testing.T) {
-	rules := Rules{
-		Rule{
-			properties: gothmogFields{
-				product: "Firefox",
-			},
-			release_mapping: "Firefox-76.0-build1",
-			priority: 100,
-		},
-		Rule{
-			properties: gothmogFields{
-				product: "Thunderbird",
-			},
-			release_mapping: "Thunderbird-56.0-build1",
-			priority: 100,
-		},
-		Rule{
-			properties: gothmogFields{},
-			release_mapping: "MagicBuild-1.0-build1",
-			priority: 85,
-		},
+	data, err := ioutil.ReadFile("testdata/good_rules.json")
+	if err != nil {
+		t.Errorf("Couldn't read rules to run rule matching tests")
+		return
 	}
+
+	rules, err := parseRules(data)
+	if err != nil {
+		t.Errorf("Couldn't parse rules to run rule matching tests")
+		return
+	}
+
 	tests := map[string]struct {
 		req   gothmogFields
 		want Rule
 	}{
-		"product match defined": {
+		"simple string matches": {
 			req: gothmogFields{
 				product: "Firefox",
+				channel: "aurora",
+				instructionSet: "SSE",
+				osVersion: "Linux",
 			},
-			want: rules[0],
+			want: rules[46],
 		},
-		"product match undefined": {
-			req: gothmogFields{
-				product: "SomethingElse",
-			},
-			want: rules[2],
-		},
-		"product no match": {
+		/*"product no match": {
 			req: gothmogFields{
 				product: "NotFirefox",
 			},
@@ -93,6 +81,20 @@ func TestFindMatchingRule(t *testing.T) {
 				priority: -1,
 			},
 		},
+		"version exact match": {
+			req: gothmogFields{
+				version: "58.0",
+			},
+			want: rules[100],
+		},
+		"version no match": {
+			req: gothmogFields{
+				version: "NotFirefox",
+			},
+			want: Rule{
+				priority: -1,
+			},
+		},*/
 	}
 
 	for name, testcase := range tests {
