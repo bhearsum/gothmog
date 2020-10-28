@@ -160,6 +160,26 @@ func TestFindMatchingRule(t *testing.T) {
 		},
 		// TODO: tests for other operators for buildID, when
 		// we have rules with them in it
+		"buildTarget csv": {
+			req: gothmogFields{
+				product:     "Firefox",
+				channel:     "release-localtest",
+				version:     "56.0",
+				buildTarget: "WINNT_x86-msvc-x64",
+				memory:      ">2048",
+			},
+			want: rules[47],
+		},
+		"buildTarget csv2": {
+			req: gothmogFields{
+				product:     "Firefox",
+				channel:     "release-localtest",
+				version:     "56.0",
+				buildTarget: "WINNT_x86_64-msvc",
+				memory:      ">2048",
+			},
+			want: rules[47],
+		},
 	}
 
 	for name, testcase := range tests {

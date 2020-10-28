@@ -151,8 +151,7 @@ func findMatchingRule(rules *Rules, req gothmogFields) Rule {
 		if rule.properties.buildid != "" && !matchComparison(rule.properties.buildid, req.buildid) {
 			continue
 		}
-		// TODO: support comma separated values
-		if rule.properties.buildTarget != "" && !matchCsv(rule.properties.buildid, req.version, false) {
+		if rule.properties.buildTarget != "" && !matchCsv(rule.properties.buildTarget, req.buildTarget, false) {
 			continue
 		}
 		// TODO: support comma separated values

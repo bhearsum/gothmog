@@ -1178,7 +1178,7 @@
       "alias": null,
       "backgroundRate": 100,
       "buildID": null,
-      "buildTarget": "WINNT_x86-msvc-x64",
+      "buildTarget": "WINNT_x86-msvc-x64,WINNT_x86_64-msvc",
       "channel": "release-localtest",
       "comment": "release-localtest - Migrate eligible windows 56.0 32bit users to Firefox 72.0.2 64bit - No What's New Page",
       "data_version": 9,
