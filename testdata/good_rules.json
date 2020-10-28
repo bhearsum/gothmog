@@ -1322,7 +1322,7 @@
       "product": "Firefox",
       "rule_id": 683,
       "update_type": "minor",
-      "version": "56.0,56.0.1,56.0.2"
+      "version": "56.0,56.0.1"
     },
     {
       "alias": null,

@@ -145,8 +145,7 @@ func findMatchingRule(rules *Rules, req gothmogFields) Rule {
 		if rule.properties.product != "" && rule.properties.product != req.product {
 			continue
 		}
-		// TODO: support version comparison and csv
-		if rule.properties.version != "" && !matchComparison(rule.properties.version, req.version) {
+		if rule.properties.version != "" && !matchComparison(rule.properties.version, req.version) && !matchCsv(rule.properties.version, req.version, false) {
 			continue
 		}
 		// TODO: support version comparison

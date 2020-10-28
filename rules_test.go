@@ -93,13 +93,60 @@ func TestFindMatchingRule(t *testing.T) {
 				priority: -1,
 			},
 		},
-		"version less than": {
+		"version <": {
 			req: gothmogFields{
 				product: "Firefox",
 				channel: "esr",
 				version: "78.0",
 			},
 			want: rules[5],
+		},
+		// TODO: test for version <= & >
+		// But we don't have rules that use these right now
+		"version > matches higher": {
+			req: gothmogFields{
+				product:   "Firefox",
+				channel:   "beta*",
+				version:   "45.0",
+				osVersion: "GTK 2,GTK 3.0.,GTK 3.1.,GTK 3.2.,GTK 3.3.",
+			},
+			want: rules[120],
+		},
+		"version > matches exact": {
+			req: gothmogFields{
+				product:   "Firefox",
+				channel:   "beta*",
+				version:   "44.0",
+				osVersion: "GTK 2,GTK 3.0.,GTK 3.1.,GTK 3.2.,GTK 3.3.",
+			},
+			want: rules[120],
+		},
+		"version matches csv": {
+			req: gothmogFields{
+				product:   "Firefox",
+				channel:   "release*",
+				version:   "56.0",
+				osVersion: "Windows_NT",
+			},
+			want: rules[52],
+		},
+		"version matches csv2": {
+			req: gothmogFields{
+				product:   "Firefox",
+				channel:   "release*",
+				version:   "56.0.1",
+				osVersion: "Windows_NT",
+			},
+			want: rules[52],
+		},
+		"version no match csv": {
+			req: gothmogFields{
+				product:   "Firefox",
+				channel:   "release*",
+				version:   "99.0",
+				osVersion: "Windows_NT",
+			},
+			want: Rule{priority: -1},
 		},
 	}
 
