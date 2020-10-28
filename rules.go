@@ -148,8 +148,7 @@ func findMatchingRule(rules *Rules, req gothmogFields) Rule {
 		if rule.properties.version != "" && !matchComparison(rule.properties.version, req.version) && !matchCsv(rule.properties.version, req.version, false) {
 			continue
 		}
-		// TODO: support version comparison
-		if rule.properties.buildid != "" && rule.properties.buildid != req.buildid {
+		if rule.properties.buildid != "" && !matchComparison(rule.properties.buildid, req.buildid) {
 			continue
 		}
 		// TODO: support comma separated values

@@ -79,6 +79,7 @@ func TestFindMatchingRule(t *testing.T) {
 				channel:        "aurora",
 				instructionSet: "SSE",
 				osVersion:      "Linux",
+				buildid:        "2020101010101010",
 			},
 			want: rules[46],
 		},
@@ -148,6 +149,17 @@ func TestFindMatchingRule(t *testing.T) {
 			},
 			want: Rule{priority: -1},
 		},
+		"buildid <": {
+			req: gothmogFields{
+				product:   "Firefox",
+				channel:   "nightly*",
+				buildid:   "20151209095499",
+				osVersion: "Windows_NT",
+			},
+			want: rules[108],
+		},
+		// TODO: tests for other operators for buildID, when
+		// we have rules with them in it
 	}
 
 	for name, testcase := range tests {
