@@ -207,6 +207,17 @@ func TestFindMatchingRule(t *testing.T) {
 			},
 			want: rules[33],
 		},
+		"memory >": {
+			req: gothmogFields{
+				product:     "Firefox",
+				channel:     "release-localtest",
+				buildTarget: "WINNT_x86_64-msvc",
+				version:     "56.0",
+				memory:      "2049",
+			},
+			want: rules[47],
+		},
+		// TODO: test other operators when we have rules with them
 	}
 
 	for name, testcase := range tests {

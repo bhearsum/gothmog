@@ -168,8 +168,7 @@ func findMatchingRule(rules *Rules, req gothmogFields) Rule {
 		if rule.properties.instructionSet != "" && rule.properties.instructionSet != req.instructionSet {
 			continue
 		}
-		// TODO: support comparison
-		if rule.properties.memory != "" && rule.properties.memory != req.memory {
+		if rule.properties.memory != "" && !matchComparison(rule.properties.memory, req.memory) {
 			continue
 		}
 		if rule.properties.distribution != "" && rule.properties.distribution != req.distribution {
