@@ -76,8 +76,9 @@ func parseRules(data []byte) (Rules, error) {
 func matchCsv(field string, value string, substring bool) bool {
 	for _, f := range strings.Split(field, ",") {
 		if substring {
-			// TODO: do a substring match!
-			return false
+			if strings.Contains(value, f) {
+				return true
+			}
 		} else {
 			if f == value {
 				return true
@@ -161,8 +162,7 @@ func findMatchingRule(rules *Rules, req gothmogFields) Rule {
 		if rule.properties.channel != "" && rule.properties.channel != req.channel {
 			continue
 		}
-		// support comma separated values and partial matches
-		if rule.properties.osVersion != "" && rule.properties.osVersion != req.osVersion {
+		if rule.properties.osVersion != "" && !matchCsv(rule.properties.osVersion, req.osVersion, true) {
 			continue
 		}
 		if rule.properties.instructionSet != "" && rule.properties.instructionSet != req.instructionSet {

@@ -218,6 +218,42 @@ func TestFindMatchingRule(t *testing.T) {
 			want: rules[47],
 		},
 		// TODO: test other operators when we have rules with them
+		"osVersion csv": {
+			req: gothmogFields{
+				product:   "Firefox",
+				channel:   "aurora",
+				buildid:   "20170123004000",
+				osVersion: "Windows_NT 5.1",
+			},
+			want: rules[58],
+		},
+		"osVersion csv2": {
+			req: gothmogFields{
+				product:   "Firefox",
+				channel:   "aurora",
+				buildid:   "20170123004000",
+				osVersion: "Windows_NT 5.2",
+			},
+			want: rules[58],
+		},
+		"osVersion csv3": {
+			req: gothmogFields{
+				product:   "Firefox",
+				channel:   "aurora",
+				buildid:   "20170123004000",
+				osVersion: "Windows_NT 6.0",
+			},
+			want: rules[58],
+		},
+		"osVersion substring match": {
+			req: gothmogFields{
+				product:   "Firefox",
+				channel:   "esr*",
+				osVersion: "Windows_NT 6.0",
+				version:   "38.0",
+			},
+			want: rules[114],
+		},
 	}
 
 	for name, testcase := range tests {
