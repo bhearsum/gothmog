@@ -180,6 +180,33 @@ func TestFindMatchingRule(t *testing.T) {
 			},
 			want: rules[47],
 		},
+		"locale csv": {
+			req: gothmogFields{
+				product: "Firefox",
+				channel: "release*",
+				version: "56.0",
+				locale:  "as",
+			},
+			want: rules[33],
+		},
+		"locale csv2": {
+			req: gothmogFields{
+				product: "Firefox",
+				channel: "release*",
+				version: "56.0",
+				locale:  "mai",
+			},
+			want: rules[33],
+		},
+		"locale csv3": {
+			req: gothmogFields{
+				product: "Firefox",
+				channel: "release*",
+				version: "56.0",
+				locale:  "bn-IN",
+			},
+			want: rules[33],
+		},
 	}
 
 	for name, testcase := range tests {

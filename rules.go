@@ -154,8 +154,7 @@ func findMatchingRule(rules *Rules, req gothmogFields) Rule {
 		if rule.properties.buildTarget != "" && !matchCsv(rule.properties.buildTarget, req.buildTarget, false) {
 			continue
 		}
-		// TODO: support comma separated values
-		if rule.properties.locale != "" && rule.properties.locale != req.locale {
+		if rule.properties.locale != "" && !matchCsv(rule.properties.locale, req.locale, false) {
 			continue
 		}
 		// TODO: support * globbing
