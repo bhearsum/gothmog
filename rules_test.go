@@ -163,7 +163,7 @@ func TestFindMatchingRule(t *testing.T) {
 		"buildTarget csv": {
 			req: gothmogFields{
 				product:     "Firefox",
-				channel:     "release-localtest",
+				channel:     "bhrelease-localtest",
 				version:     "56.0",
 				buildTarget: "WINNT_x86-msvc-x64",
 				memory:      ">2048",
@@ -173,7 +173,7 @@ func TestFindMatchingRule(t *testing.T) {
 		"buildTarget csv2": {
 			req: gothmogFields{
 				product:     "Firefox",
-				channel:     "release-localtest",
+				channel:     "bhrelease-localtest",
 				version:     "56.0",
 				buildTarget: "WINNT_x86_64-msvc",
 				memory:      ">2048",
@@ -210,7 +210,7 @@ func TestFindMatchingRule(t *testing.T) {
 		"memory >": {
 			req: gothmogFields{
 				product:     "Firefox",
-				channel:     "release-localtest",
+				channel:     "bhrelease-localtest",
 				buildTarget: "WINNT_x86_64-msvc",
 				version:     "56.0",
 				memory:      "2049",
@@ -251,6 +251,31 @@ func TestFindMatchingRule(t *testing.T) {
 				channel:   "esr*",
 				osVersion: "Windows_NT 6.0",
 				version:   "38.0",
+			},
+			want: rules[114],
+		},
+		"channel exact match": {
+			req: gothmogFields{
+				product: "Firefox",
+				channel: "date-localtest",
+			},
+			want: rules[1],
+		},
+		"channel match glob": {
+			req: gothmogFields{
+				product:   "Firefox",
+				channel:   "esr",
+				version:   "38.0.0",
+				osVersion: "Windows_NT",
+			},
+			want: rules[114],
+		},
+		"channel match glob2": {
+			req: gothmogFields{
+				product:   "Firefox",
+				channel:   "esr-localtest",
+				version:   "38.0.0",
+				osVersion: "Windows_NT",
 			},
 			want: rules[114],
 		},

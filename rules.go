@@ -133,9 +133,19 @@ func matchComparison(field string, value string) bool {
 	return false
 }
 
+func matchGlob(field string, value string) bool {
+	length := len(field)
+	if field[length-1:] == "*" && strings.HasPrefix(value, field[0:length-1]) {
+		return true
+	}
+	if field == value {
+		return true
+	}
+	return false
+}
+
 // findMatchingRule compares an incoming request against a set of
 // Rules and returns the best matching Rule.
-// TODO: this needs tests!
 func findMatchingRule(rules *Rules, req gothmogFields) Rule {
 	// TODO: this should be define outside of the function as a general
 	// sentinel value
@@ -158,8 +168,8 @@ func findMatchingRule(rules *Rules, req gothmogFields) Rule {
 		if rule.properties.locale != "" && !matchCsv(rule.properties.locale, req.locale, false) {
 			continue
 		}
-		// TODO: support * globbing
-		if rule.properties.channel != "" && rule.properties.channel != req.channel {
+		// matchGlob handles exact matching and glob matching
+		if !matchGlob(rule.properties.channel, req.channel) {
 			continue
 		}
 		if rule.properties.osVersion != "" && !matchCsv(rule.properties.osVersion, req.osVersion, true) {
