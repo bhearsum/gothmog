@@ -1,0 +1,4 @@
+* Add code for loading Release blobs
+* Import Balrog Release blobs into repo
+* Add code for constructing responses from a blob + request
+* Wire up HTTP handler to match against rules and construct response
