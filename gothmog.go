@@ -74,12 +74,7 @@ func (g *GothmogHandler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		rw.Write([]byte("Couldn't parse update URI"))
 	}
 
-	// TODO: Should cache the rule parsing or do it once at start-up.
-	if ok != true {
-		rw.Header().Set("Content-Type", "text/plain")
-		rw.Write([]byte("couldn't parse rule"))
-	} else {
-		rw.Header().Set("Content-Type", "text/plain")
-		rw.Write([]byte(fmt.Sprintf("%v", fields)))
-	}
+	rule := findMatchingRule(g.rules, fields)
+	rw.Header().Set("Content-Type", "text/plain")
+	rw.Write([]byte(fmt.Sprintf("Matching rule is: %v", rule)))
 }

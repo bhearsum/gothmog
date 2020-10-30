@@ -146,6 +146,9 @@ func matchGlob(field string, value string) bool {
 
 // findMatchingRule compares an incoming request against a set of
 // Rules and returns the best matching Rule.
+// TODO: surely there must be some kind of error case possible here?
+// Or perhaps the sentinel value is enough? Or maybe get rid of that
+// and return an ok/not ok bool instead?
 func findMatchingRule(rules *Rules, req gothmogFields) Rule {
 	// TODO: this should be define outside of the function as a general
 	// sentinel value
