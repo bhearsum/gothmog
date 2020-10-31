@@ -24,7 +24,7 @@ func TestParseRules(t *testing.T) {
 	for name, testcase := range tests {
 		data, err := ioutil.ReadFile(testcase.file)
 		if err != nil {
-			t.Errorf("%v failed when reading %v: %v", name, testcase.file, testcase.err)
+			t.Errorf("%v failed when reading %v: %v", name, testcase.file, err)
 			continue
 		}
 
